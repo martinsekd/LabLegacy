@@ -12,6 +12,7 @@ namespace Test.ECS.Legacy
         
         static void Main(string[] args)
         {
+
         }
     }
 }
