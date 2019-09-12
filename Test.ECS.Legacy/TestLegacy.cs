@@ -10,10 +10,18 @@ namespace Test.ECS.Legacy
 {
     class TestLegacy
     {
-        [Test]
-        public void Test_Test()
+        private global::ECS.Legacy.ECS uut;
+
+        [SetUp]
+        public void SetUp()
         {
-            Assert.That(0, Is.Zero);
+            uut = new global::ECS.Legacy.ECS(25);
+        }
+
+        [Test]
+        public void RunSelfTest_RunSelfTest_True()
+        {
+            Assert.That(uut.RunSelfTest,Is.True);
         }
         static void Main(string[] args)
         {
