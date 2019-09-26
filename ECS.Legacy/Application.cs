@@ -1,16 +1,18 @@
-﻿namespace ECS.Legacy
+﻿
+namespace ECS.Legacy
 {
     public class Application
     {
         public static void Main(string[] args)
         {
-            var ecs = new ECS(28);
+            
+            //var ecs = new ECS(28,new FakeHeater(),new FakeTempSensor(3));
 
-            ecs.Regulate();
+            //ecs.Regulate();
 
-            ecs.SetThreshold(20);
+            //ecs.SetThreshold(20);
 
-            ecs.Regulate();
+            //ecs.Regulate();
         }
     }
 }
