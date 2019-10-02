@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using ECS.Legacy;
 using NUnit.Framework;
 using NSubstitute;
+using NSubstitute.Core.Arguments;
+
 namespace Test.ECS.Legacy
 {
     [TestFixture]
@@ -18,11 +20,11 @@ namespace Test.ECS.Legacy
         [SetUp]
         public void setup()
         {
-            //uut2 = new FakeHeater();
+            
             
         }
 
-        [TestCase(3,3)]
+        /*[TestCase(3,3)]
         [TestCase(0, 0)]
         [TestCase(-5, -5)]
         public void GetTemp_setTempToa_b(int a, int b)
@@ -51,7 +53,7 @@ namespace Test.ECS.Legacy
             uut2.Received().TurnOn();
 
         }
-
+        */
         [Test]
         public void TurnOn_turnOffHeater_false()
         {
@@ -62,25 +64,64 @@ namespace Test.ECS.Legacy
             uut3 = new global::ECS.Legacy.ECS(20,uut2,uut1);
 
 
-
-            //uut2.TurnOff();
-
             Assert.That(uut2.RunSelfTest, Is.EqualTo(false));
         }
 
-        [TestCase(4,4)]
-        [TestCase(0,0)]
-        [TestCase(-2,-2)]
-        public void GetCurTemp_addaToTemp_b(int a, int b)
+        [TestCase( 10)]
+        [TestCase(20)]
+        [TestCase(6)]
+        [TestCase(5)]
+        public void TurnOn_SetThresholdOverTempAndRegulate_TurnOnCalledOnce(int a)
         {
-            uut3 = new global::ECS.Legacy.ECS(10, new FakeHeater(), new FakeTempSensor());
-            int temp = uut3.GetCurTemp();
+            //arrange
+            uut2 = Substitute.For<IHeater>();
+            uut1 = Substitute.For<ITempSensor>();
+            uut3 = new global::ECS.Legacy.ECS(a, uut2, uut1);
 
-            
+            //act
+            uut1.GetTemp().Returns(5);
+            uut3.Regulate();
+
+            //assert
+            uut2.Received(1).TurnOn();
         }
-        //static void Main(string[] args)
-        //{
 
-        //}
+        
+        [TestCase(4)]
+        [TestCase(0)]
+        [TestCase(-1)]
+        public void TurnOff_SetThresholdUnderTempAndRegulate_TurnOffCalledOnce(int a)
+        {
+            //arrange
+            uut2 = Substitute.For<IHeater>();
+            uut1 = Substitute.For<ITempSensor>();
+            uut3 = new global::ECS.Legacy.ECS(a, uut2, uut1);
+
+            //act
+            uut1.GetTemp().Returns(5);
+            uut3.Regulate();
+
+            //assert
+            uut2.Received(1).TurnOff();
+        }
+
+        [TestCase(-1)]
+        public void RunSelfTest_HeaterFails_SelfTestFails(int a)
+        {
+            //arrange
+            uut2 = Substitute.For<IHeater>();
+            uut1 = Substitute.For<ITempSensor>();
+            uut3 = new global::ECS.Legacy.ECS(a, uut2, uut1);
+
+            //act
+            uut1.RunSelfTest().Returns(true);
+            uut2.RunSelfTest().Returns(true);
+
+            //uut3.Regulate();
+
+            //assert
+            Assert.IsTrue(uut3.RunSelfTest());
+        }
+
     }
 }

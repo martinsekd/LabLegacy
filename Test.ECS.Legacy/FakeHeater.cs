@@ -31,7 +31,7 @@ namespace ECS.Legacy
 
         public bool RunSelfTest()
         {
-            return turnOn_;
+            return true;
         }
     }
 }

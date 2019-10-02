@@ -16,7 +16,7 @@
         public void Regulate()
         {
             var t = _tempSensor.GetTemp();
-            if (t < _threshold)
+            if (t <= _threshold)
                 _heater.TurnOn();
             else
                 _heater.TurnOff();
